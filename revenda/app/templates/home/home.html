@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-BR">
+   <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+      <title>RevendaCars</title>
+   </head>
+   <style>
+      #homeCarrouseu {
+        height: 500px;
+        overflow: hidden; 
+      }
+      :is(.carousel-control-prev-icon,.carousel-control-next-icon ) {
+        filter: invert(100%);
+      }
+      .bg-img {
+        width: 100%;
+        height: 100%;
+      }
+      .img {
+        width: 100%;
+        height: 500px;
+        background-size: cover;
+        background-position: center;
+      }
+      .carrosel-div {
+        padding: 0;
+      }
+   </style>
+   <body>
+      {% include 'includes/chatButton.html'%}
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+         {% include 'includes/navbar.html'%}
+      </nav>
+      <div class="container bg-dark mbm-4 vh-100">
+         <div class="container">
+            <h1 style="color: white;">Bem-vindo à Revenda de Carros</h1>
+            <p style="color: white">Encontre os melhores Carros com os melhores preços.</p>
+            <a href="#" class="btn btn-primary">Veja nossos Carros</a>
+         </div>
+         <div class="container mt-4 rounded border carrosel-div">
+            <div id="homeCarrouseu" class="carousel slide" data-ride="carousel">
+               <ol class="carousel-indicators">
+                  <li data-target="#homeCarrouseu" data-slide-to="0" class="active"></li>
+                  <li data-target="#homeCarrouseu" data-slide-to="1"></li>
+                  <li data-target="#homeCarrouseu" data-slide-to="2"></li>
+               </ol>
+               <div class="carousel-inner">
+                  <div class="carousel-item active">
+                     <div class="img" style='background-image: url("https://www.nissan-cdn.net/content/dam/Nissan/br/20210921/2021-nissan-gtr-nismo-exterior-features.png.ximg.l_12_m.smart.png");'></div>
+                     <div class="carousel-caption d-none d-md-block">
+                     </div>
+                  </div>
+                  <div class="carousel-item">
+                     <div class="img" style="background-image: url('https://image1.mobiauto.com.br/images/api/images/v1.0/13047952/transform/fl_progressive,f_webp,q_70'); background-position: center" ></div>
+                     <div class="carousel-caption d-none d-md-block">
+                     </div>
+                  </div>
+                  <div class="carousel-item">
+                     <div class="img" style="background-image: url(https://cdn.autopapo.com.br/box/uploads/2021/01/13162946/ferrari-f430-f1-leiloada-donald-trump.png);"></div>
+                     <div class="carousel-caption d-none d-md-block">
+                     </div>
+                  </div>
+               </div>
+               <a class="carousel-control-prev" href="#homeCarrouseu" role="button" data-slide="prev">
+               <span class="carousel-control-prev-icon text-dark" aria-hidden="true"></span>
+               <span class="sr-only">Previous</span>
+               </a>
+               <a class="carousel-control-next" href="#homeCarrouseu" role="button" data-slide="next">
+               <span class="carousel-control-next-icon text-dark" aria-hidden="true"></span>
+               <span class="sr-only">Next</span>
+               </a>
+            </div>
+         </div>
+      </div>
+      {% include 'includes/footer.html'%}
+   </body>
+   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</html>

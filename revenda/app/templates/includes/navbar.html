@@ -1,0 +1,40 @@
+<a class="navbar-brand" href="#" onclick="redirecionar('/')">RevendasCar</a>
+<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+        <li class="nav-item">
+            <a class="nav-link" href="#">Conta</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">Carros</a>
+        </li>
+        <li class="nav-item dropdown">
+            <form class="form-inline my-2 my-lg-0">
+                {% if request.user.is_authenticated %}
+                    <a class="nav-link">{{ request.user.username}}</a>
+                    <form method="POST" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        
+                        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" id="BotaoSair">Sair</button>
+                    </form>
+                {% else %}
+                    <button class="btn btn-outline-sucess my-2 my-sm-0" type="submit" onclick="redirecionar('user/login')">Logar</button>
+                {% endif %}
+            </form>
+        </li>
+    </ul>   
+</div>
+
+<script>
+    function redirecionar(path) {
+        window.location.replace(path);
+    }
+</script>
+
+<style>
+    .navbar.navbar-expand-lg.navbar-light.bg-light {
+        background: #c6d1da!important
+    }
+</style>

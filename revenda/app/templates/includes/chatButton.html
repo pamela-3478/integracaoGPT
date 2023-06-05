@@ -1,0 +1,214 @@
+<!-- Css -->
+<style>
+    disable{
+    background-color: rgb(250, 0, 0);
+    cursor: wait;
+    }
+    .chat-button {
+    z-index: 100;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 2s ease-in-out;
+    }
+    .chat-box { 
+    z-index: 100;
+    overflow: auto;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 400px;
+    height: 400px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    display: none;
+    transition: all 2s ease-in-out;
+    border-radius: 1em;
+    }
+    .chat-box .header-chat-box {
+    margin: 12px;
+    } 
+    .chat-box .header-chat-box .title {
+    font-size: 14px;
+    }
+    .chat-open {
+    display: block;
+    }
+    .line {
+    display: flex;
+    height: 1.5px;
+    width: 100%;
+    background: black;
+    border-radius: 2px;
+    }
+    .chat-input {
+    display: flex;
+    margin-top: 61%;
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    }
+    .chat-input form {
+    width: 100%;
+    display: flex;
+    }
+    .chat-input .chat-input-user {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 90%;
+    }
+    .chat-input .chat-input-user-confirm {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 10%;
+    }
+    .chat-response {
+    padding: 10px;
+    background-color: #f1f1f1;
+    margin-bottom: 10px;
+    }
+    .chat-user {
+    padding: 10px;
+    background-color: #e2e2e2;
+    margin-bottom: 10px;
+    text-align: right;
+    }
+ </style>
+
+ <div id="chatButton" class="chat-button">
+    <i class="fas fa-comment">Chat</i>
+ </div>
+ <div id="chatBox" class="chat-box">
+    <div class="header-chat-box">
+       <h3>Chat Auto Atendimento</h3>
+    </div>
+    <div class="line"></div>
+    <div class="chat-list-response" id="chat-list-response">
+       <div class="chat-response">
+          <p>Olá! Em que posso ajudar?</p>
+       </div>
+    </div>
+    <div class="chat-input" id="chat-bot-user">
+       <form action="">
+          {% csrf_token %}
+          <input type="text" id="userInput" class="chat-input-user" id="duvida" placeholder="Digite sua duvida">
+          <button type="submit" class="chat-input-user-confirm">></button>
+       </form>
+    </div>
+ </div>
+
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+ <script>
+
+    window.addEventListener('beforeunload', function() {
+        fetch("{% url 'resetarChat' %}", { method: 'GET' });
+    });
+
+    document.addEventListener('click', (e) => {
+        if(e.target.id === 'BotaoSair') e.target.submit()
+        e.preventDefault();
+    });
+    
+    const chatBoxResponseDiv = document.getElementById('chat-list-response');
+    const userConfirmDiv = document.getElementById('chat-bot-user');
+    const buttonConfirm = userConfirmDiv.querySelector('button');
+    const inputConfirm = userConfirmDiv.querySelectorAll('input')[1];
+    
+    async function RotaGPT() {
+        var mensagem = inputConfirm.value;
+        inputConfirm.value = null
+        if (!mensagem) return;
+        console.log(mensagem, 'no gpt')
+        criaDivMensagemUsuario(mensagem)
+        await enviarDados(mensagem)
+        ativaBotao();
+        return; // 
+    }
+    
+    function ativaBotao() {
+        buttonConfirm.removeAttribute('disabled');
+        buttonConfirm.classList.remove('disabled');
+    }
+    
+    function desativaBotao() {
+        buttonConfirm.setAttribute('disabled', '');
+        buttonConfirm.classList.add('disabled');
+    }
+    
+    function criaDivMensagemUsuario(mensagem) {
+        var chatDiv = document.createElement('div');
+        chatDiv.classList.add('chat-user');
+        var p = document.createElement('p');
+        console.log(mensagem, 132)
+        p.textContent = mensagem;
+        chatDiv.appendChild(p);
+        chatBoxResponseDiv.appendChild(chatDiv);
+    }
+    
+    function criaDivMensagemGPT(mensagem) {
+        var chatDiv = document.createElement('div');
+        chatDiv.classList.add('chat-response');
+        var p = document.createElement('p');
+        p.textContent = mensagem;
+        chatDiv.appendChild(p);
+        chatBoxResponseDiv.appendChild(chatDiv);
+    }
+    
+    buttonConfirm.addEventListener('click', async (e) => {
+        if (buttonConfirm.disabled) return;
+        if (inputConfirm.value === '') return;
+        desativaBotao();
+        await RotaGPT();
+    });
+    
+    document.addEventListener("DOMContentLoaded", () => {
+        var chatButton = document.getElementById("chatButton");
+        var chatBox = document.getElementById("chatBox");
+      
+        chatButton.addEventListener("click", () => {
+            chatBox.classList.toggle("chat-open");
+        });
+    });
+    
+    async function enviarDados(mensagem = null) {
+        if (!mensagem) return;
+      
+        // Dados a serem enviados
+        const urlAPI = "{% url 'chatBot' %}";
+        const csrfToken = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        
+        console.log(mensagem)
+        const data = {
+          'mensagem': mensagem,
+        };
+      
+        const headers = {
+          "X-CSRFToken": csrfToken
+        };
+      
+        try {
+          const response = await axios.post(urlAPI, data, { headers: headers, timeout: 30000});
+            console.log(response.data)
+            criaDivMensagemGPT(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+      
+ </script>
